@@ -1,5 +1,3 @@
-# TimeSked V13 - Proper OAuth flow for signing in
-
 from fastapi import FastAPI, Response
 from fastapi import Request as fast_request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -64,11 +62,6 @@ queue = asyncio.Queue()
 
 
 async def process_queue():
-    """Background task to process message edits in a queue.
-
-    Continuously retrieves edit requests from the queue and processes them,
-    handling potential errors during message editing.
-    """
     while True:
         print("Processing queue...")
         chat_id, sent_message_id, text, received_message_id = await queue.get()
@@ -82,12 +75,6 @@ async def process_queue():
 
 @app.get("/api/get_counts")
 def get_counts():
-    """Endpoint to retrieve dashboard data (user, message, and event counts).
-
-    Returns:
-        fastapi.responses.JSONResponse: A JSON response containing event, message,
-                                          and user counts.
-    """
     result = dashboard_data(db)
     output = {
         "event_count": result[2],
@@ -99,7 +86,6 @@ def get_counts():
 
 @app.get("/")
 def website_return():
-    """Serves the TimeSked website HTML content."""
     with open("TimeSked.html", "r") as f:
         html_code = f.read()
     return Response(content=html_code, media_type="text/html")
@@ -107,19 +93,6 @@ def website_return():
 
 @app.get("/oauthcallback")
 async def oauth_callback(request: fast_request):
-    """Handles the OAuth2 callback after user grants Google Calendar access.
-
-    Fetches the authorization code, retrieves user chat ID from the state parameter,
-    exchanges the code for tokens, initiates the first-time sign-in process,
-    and redirects the user to the TimeSked Telegram bot.
-
-    Args:
-        request (fastapi.Request): The incoming FastAPI request object.
-
-    Returns:
-        fastapi.responses.RedirectResponse: A redirect response to the TimeSked
-                                              Telegram bot.
-    """
     try:
         flow = return_flow()
 
@@ -147,7 +120,7 @@ async def oauth_callback(request: fast_request):
         success_msg = "Your account has been successfully linked, and a dedicated calendar has been set up. All your events will land right there. 🎯🗓️"
         await send_msg(session, chat_id, None, success_msg, None, None)
 
-        return RedirectResponse("https://t.me/TimeSked_bot")
+        return RedirectResponse("https://t.me/Tic4techgamebot")
 
     except Exception as e:
         print(f"Error in oauth_callback {e}")
@@ -164,17 +137,6 @@ async def oauth_callback(request: fast_request):
 
 @app.post("/")
 async def index(request: fast_request):
-    """Main webhook endpoint for handling incoming Telegram updates.
-
-    Processes incoming messages, photos, commands, and callback queries from Telegram,
-    delegating to appropriate handlers based on message type and content.
-
-    Args:
-        request (fastapi.Request): The incoming FastAPI request object.
-
-    Returns:
-        dict: A dictionary indicating the status of the request.
-    """
     try:
         asyncio.create_task(process_queue())
         msg = await request.json()
