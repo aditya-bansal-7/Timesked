@@ -6,26 +6,6 @@ import asyncio
 
 
 async def search_handler(db, session, chat_id, confirm=False, sent_message_id=None):
-    """Initiates the chat functionality for a user.
-
-    If confirm is False, sends a confirmation message to the user to share
-    their upcoming event details and clears the chat history upon session end.
-    If confirm is True, retrieves user data, updates their status to "CHATTING",
-    initializes chat history, and sends a welcome message.
-
-    Args:
-        db: Firestore client instance.
-        session: httpx client session object.
-        chat_id (int): Telegram chat ID of the user.
-        confirm (bool, optional): Whether the user confirmed the chat initiation.
-            Defaults to False.
-        sent_message_id (int, optional): Message ID of the previously sent
-            confirmation message (if any). Defaults to None.
-
-    Raises:
-        Exception: If an error occurs during the process, sends an error message
-            to the user and prints the error message to the console.
-    """
     try:
         if not confirm:
             text = "By clicking confirm, your 10 upcoming event details will be shared with Gemini. Your chat history will be cleared when this chat session is closed."
@@ -82,20 +62,6 @@ async def search_handler(db, session, chat_id, confirm=False, sent_message_id=No
 
 
 def chat_history_creator(db, chat_id, doc_ref):
-    """Creates and initializes the chat history for a user.
-
-    Retrieves upcoming events from the database, formats them into a message,
-    and updates the user's document in Firestore with the initial chat history.
-
-    Args:
-        db: Firestore client instance.
-        chat_id (int): Telegram chat ID of the user.
-        doc_ref: Firestore document reference of the user.
-
-    Raises:
-        Exception: If an error occurs during the process, prints the error
-            message to the console.
-    """
     try:
         result = retrieve_upcoming_events(db, chat_id)
         output = f"{result} This list contains the details about the upcoming events of the user."
@@ -109,24 +75,6 @@ def chat_history_creator(db, chat_id, doc_ref):
 async def chat_handler(
     db, session, chat_id, previous_messages, query_message, received_message_id
 ):
-    """Handles user queries in the chat.
-
-    Appends the user's message to the chat history, generates a response
-    using the chat model, sends the response back to the user, and updates
-    the chat history in Firestore.
-
-    Args:
-        db: Firestore client instance.
-        session: httpx client session object.
-        chat_id (int): Telegram chat ID of the user.
-        previous_messages (list): List of previous messages in the chat.
-        query_message (str): The user's query message.
-        received_message_id (int): Message ID of the received user message.
-
-    Raises:
-        Exception: If an error occurs during the process, prints the error
-            message to the console.
-    """
     try:
         previous_messages.append(
             {
@@ -154,17 +102,6 @@ async def chat_handler(
 
 
 async def chat_history_updater(db, chat_id, output):
-    """Updates the chat history of a user in Firestore.
-
-    Args:
-        db: Firestore client instance.
-        chat_id (int): Telegram chat ID of the user.
-        output (list): Updated list of messages representing the chat history.
-
-    Raises:
-        Exception: If an error occurs during the process, prints the error
-            message to the console.
-    """
     try:
         col_ref = db.collection("user_records")
         doc_ref = col_ref.document(str(chat_id))
@@ -174,16 +111,6 @@ async def chat_history_updater(db, chat_id, output):
 
 
 def chat_history_retriever(db, chat_id):
-    """Retrieves the chat history of a user from Firestore.
-
-    Args:
-        db: Firestore client instance.
-        chat_id (int): Telegram chat ID of the user.
-
-    Returns:
-        list: List of messages representing the chat history, or None if
-            an error occurs.
-    """
     try:
         col_ref = db.collection("user_records")
         doc_ref = col_ref.document(str(chat_id)).get()
@@ -195,19 +122,6 @@ def chat_history_retriever(db, chat_id):
 
 
 def chat_history_deleter(db, chat_id):
-    """Deletes the chat history of a user in Firestore.
-
-    Sets the 'chat_history' and 'position' fields to None in the user's
-    document.
-
-    Args:
-        db: Firestore client instance.
-        chat_id (int): Telegram chat ID of the user.
-
-    Raises:
-        Exception: If an error occurs during the process, prints the error
-            message to the console.
-    """
     try:
         col_ref = db.collection("user_records")
         doc_ref = col_ref.document(str(chat_id))
@@ -218,20 +132,6 @@ def chat_history_deleter(db, chat_id):
 
 
 async def cancel_handler(db, session, chat_id):
-    """Handles the /cancel command, ending the chat session.
-
-    Deletes the user's chat history, sends a goodbye message,
-    and unpins the exit chat message.
-
-    Args:
-        db: Firestore client instance.
-        session: httpx client session object.
-        chat_id (int): Telegram chat ID of the user.
-
-    Raises:
-        Exception: If an error occurs during the process, sends an error message
-            to the user and prints the error message to the console.
-    """
     try:
         chat_history_deleter(db, chat_id)
         await send_msg(
