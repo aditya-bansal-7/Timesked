@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TimeSked</title>
+    <link
+        href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAApdJREFUOE9tk0tIVGEUx3/fvePcO+OMmhVID7EiFTQnSpRI7YFZMtCmRaugfbs2bVtF6xatCizCHhQUREZohEkQVFSgvemBjpNOOs577sy9X3x3RhzRAxfudx7/8/ofcf/2DYmUCCBr5UmlM+i6ju7RkY4ySTRNA+lgFQqYXpNgtR8lUgjEMoBSdO/dRSKdo0rX8flMUqkMUtpUeTzoukYmkyUSiZDMe9YHCB/uJFt00DXNze5IB7c6ARLp6icnPzO7kEUqiMoKlEP40H7Onr9If08XJ08cZWY+RtDvp742yJXrwzRtbaClaRuzCzk3uNTC8JBU/atsg337ePT0OaZHktMM3nyYQiA4Fe4nm1jENLwgNf4uWRUVLAM4Did6Q3z6HWHq2w+G7jyiYBWoCQawbZtLF84RCASYi0aZTxTXAtgKoKeDHzNzPB4d5+7Dp4TaWvn28xem18vp8GH6j/QSjUSJJe2KIVZUcOxAO1+nZxkZm+DBk1Gy2by7QtMwOBM+yPGBAWKxfyyk1cSWh1gGUPs+0tXKTCxOLpPm8tWb/IsvkUimaNuxhYHuPXT3HmJmOsJiVqwP0Ld/N68/fmbThlqKmQQjYy+RxTyNDZuJO1U072qiptpPIqevD3AwtIOHz15gZ5IMDh4ntrCIEMINunbrHju3b6GluZl4TlvNAyEVaSQH2rdj+nxI6aBpukvjlc9GOg6TX34SX1VB+RaUsa0xiNcwEO6EZPkWSmx0HAdH2nz/8xdLr11LZZUpOR/BtovK3xXFf1WJ2oSyC6GhGyZmoASwQuXS05XxiVdYVoFgsFp58Pbdezr37VW/GF6DUEd7hTfla6xQLSUSJJMpN6NlWeTyeXymz21h08Z66urK2csx/wGUzXZPFdpLgAAAAABJRU5ErkJggg=="
+        rel="icon" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/2da45a37f0.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #121212;
+        color: #f1f1f1;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+      }
+      
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #1c1f26;
+        position: fixed;
+        top: 0;
+        width: 100vw;
+        height: fit-content;
+        z-index: 10;
+        backdrop-filter: blur(15px);
+      }
+      
+      .header h1 {
+        font-family: "Montserrat", sans-serif;
+        margin-left: 20px;
+      }
+      
+      .telegram-button {
+        background-color: #0088cc;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        align-items: center;
+        text-decoration: none;
+        margin-right: 30px;
+      }
+      
+      .telegram-button i {
+        margin-right: 5px;
+      }
+      
+      
+      .introduction {
+        display: flex;
+        margin-top: 70px;
+        padding: 10px;
+        flex-wrap: wrap; /* Wrap content for responsiveness */
+      }
+      
+      .intro {
+        margin-right: 15px;
+        line-height: 1.4;
+        flex: 1 1 400px; /* Allow shrinking with a minimum width */
+      }
+      
+      ul {
+        line-height: 1.8; /* Adjust the value as needed */
+      }
+      
+      .blue-underline {
+        border-bottom: 2px solid #007bff; /* Adjust thickness and color as needed */
+        padding-bottom: 3px; /* Adjust spacing here */
+      }
+      
+      .blue-underline:hover{
+        color: #007bff;
+      }
+      
+      .intro h2,
+      h3 {
+        display: inline-block;
+        font-family: "Montserrat", sans-serif;
+      }
+      
+      
+      .video-container {
+        margin-top: 30px;
+      }
+      
+      .cards {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        width: 100%;
+        padding: 0 10px; /* Add padding to prevent content touching edges */
+      }
+      
+      .card {
+        background-color: #1c1f26;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: left;
+        flex: 1 0 21%;  /* Adjust flex-basis for better spacing */
+        margin: 10px;
+        color: white;
+        backdrop-filter: blur(15px);
+        position: relative;
+        overflow: hidden; /* This is important to clip the ::before element */ 
+      }
+      
+      .card::before {
+        content: "";
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.2) 0%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        border-radius: 50%;
+        filter: blur(50px);
+        z-index: -1;
+        /* Adjust positioning for containment */
+        top: 0; 
+        left: 0; 
+        transition: 0.8s ease;
+      }
+      
+      .card:hover::before {
+        transform: translate(40px, 40px);
+      }
+      
+      .card-content {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .card h2 {
+        color: white;
+        font-size: 1.2rem;
+        margin: 10px 0 15px 0;
+      }
+      
+      .card p {
+        font-size: 1.1rem;
+        margin: 0;
+      }
+      
+      .fas {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        margin-right: 10px;
+        font-size: 1.5rem;
+      }
+      
+      /* Timeline Styles */
+      .version-history {
+        width: 100%;
+        padding-left: 10px;
+        box-sizing: border-box;
+      }
+      
+      .timeline {
+        width: 100%;
+        position: relative;
+      }
+      
+      .item {
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+      }
+      
+      .bubble {
+        background-color: #222;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-align: center;
+        color: #fff;
+        font-weight: bold;
+        position: relative;
+        min-width: 30px;
+      }
+      
+      .details {
+        margin-left: 20px;
+        text-align: left;
+        line-height: 1.4;
+        flex-grow: 1;
+        width: 100%;
+      }
+      
+      .timeline::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        bottom: 20px;
+        left: 35px;
+        width: 2px;
+        background-color: rgba(62, 62, 78, 1);
+        z-index: -1;
+      }
+      
+      .item:first-child .bubble {
+        outline: 2px solid #007bff;
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.8);
+      }
+      
+      footer {
+        display: flex;
+        background-color: #1c1f26;
+        backdrop-filter: blur(15px);
+        width: 100%;
+        margin-bottom: 0;
+        justify-content: center;
+        align-items: center;
+        padding: 25px 25px;
+        box-sizing: border-box;
+      }
+      
+      .social-media-container {
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+      
+      .socialContainer {
+        width: 60px;
+        height: 60px;
+        background-color: rgb(44, 44, 44);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition-duration: 0.3s;
+        border-radius: 50%;
+        text-decoration: none;
+      }
+      
+      .socialContainer i {
+        color: rgb(255, 255, 255);
+      }
+      
+      /* Hover Colors */
+      .containerOne:hover {
+        background-color: #0072b1;
+        transition-duration: 0.3s;
+      }
+      
+      .containerTwo:hover {
+        background-color: #2dba4e;
+        transition-duration: 0.3s;
+      }
+      
+      .containerThree:hover {
+        background-color: #d62976;
+        transition-duration: 0.3s;
+      }
+      
+      .containerFour:hover {
+        background-color: #c71610;
+        transition-duration: 0.3s;
+      }
+      
+      .containerFour .socialSvg {
+        margin-left: 10px;
+      }
+      
+      .socialContainer:active {
+        transform: scale(0.9);
+        transition-duration: 0.3s;
+      }
+      
+      .socialSvg {
+        width: 50px;
+        height: 50px;
+        fill: rgb(255, 255, 255);
+      }
+      
+      /* Hover Animation */
+      .socialContainer:hover .socialSvg {
+        animation: slide-in-top 0.3s both;
+      }
+      
+      @keyframes slide-in-top {
+        0% {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+      
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      /* Styles for Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+        background-color: transparent;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(62, 62, 78, 1);
+        border-radius: 5px;
+      }
+      
+      /* Media Query for Responsiveness */
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          padding-bottom: 10px;
+          align-items: center;
+          justify-content: center;
+        }
+      
+        .header h1 {
+          margin-bottom: 10px;
+          padding: 0 10px;
+          margin-left: 0px;
+          text-align: center;
+        }
+      
+        .header .telegram-button {
+          margin-right: 0px;
+        }
+      
+        .introduction {
+          flex-direction: column;
+          margin-top: 100px;
+        }
+      
+        .intro {
+          margin-right: 0; /* Reset margin on smaller screens */
+        }
+      
+        .video-container {
+          margin-top: 30px;
+          width: 100%; /* Take full available width */
+          position: relative;
+          padding-bottom: 120%; /* Aspect ratio 16:9 */
+          height: 0;
+        }
+        
+        .video-container iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      
+        .cards {
+          flex-direction: column;
+          padding: 0;
+        }
+      
+        .card {
+          width: 100%;
+          margin-bottom: 20px; 
+        }
+      
+        .version-history {
+          padding-right: 10px;
+        }
+      }
+    </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>TimeSked</h1>
+    <a href="https://t.me/TimeSked_bot" target="_blank">
+      <button class="telegram-button">
+        <i class="fab fa-telegram"></i>Open in Telegram
+      </button>
+    </a>
+  </div>
+
+  <div class="introduction">
+    <div class="intro">
+      <h2 class="main-heading"><span class="blue-underline">TimeSked, AI-Powered Scheduling Assistant on Telegram</span></h2>
+      <p>
+        Manually inputting event details into calendars can be a very time-consuming task. This was an issue I was
+        facing
+        throughout my first year at college. To address this, I've been developing TimeSked, a Telegram bot that
+        simplifies
+        event scheduling through intelligent automation and seamless Google Calendar integration.
+      </p>
+      <h3><span class="blue-underline">Key Features of TimeSked :</span></h3>
+      <ul>
+        <li><b>Extract event information:</b> Simply send TimeSked a message containing event information, and it will
+          automatically extract the essential details.</li>
+        <li><b>Flexible Calendar Integration:</b> Receive a shareable Google Calendar event link or link your calendar
+          to let TimeSked directly add events to your calendar.</li>
+        <li><b>Get weather insights:</b> TimeSked also suggests dressing attire based on the weather at the event
+          location on the day of the event.</li>
+        <li><b>Engage in chat conversations:</b> You can engage in a chat with TimeSked about your upcoming events.</li>
+        <li><b>Easy Event Management:</b> View upcoming events, regenerate event details and delete events, all within
+          Telegram.</li>
+      </ul>
+
+      <h3><span class="blue-underline">Powered by : </span></h3>
+      <ul>
+        <li>FastAPI (Python) for the webhook server</li>
+        <li>Firebase for database management</li>
+        <li>Hosted on Koyeb</li>
+        <li>Gemini 1.5 Flash API for extracting event details</li>
+        <li>Weather data from Visual Crossing API</li>
+        <li>Telegram Core API for bot integration</li>
+        <li>Google Calendar V3 API for seamless managing Google Calendar</li>
+      </ul>
+    </div>
+    <div class="video-container">
+      <iframe width="450" height="540" src="https://www.youtube.com/embed/x4T6Wxu0-5Y?autoplay=1&controls=0"
+        title="TimeSked : Demo Video" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <script>
+    fetch('/api/get_counts')
+      .then((response) => response.json())
+      .then((data) => {
+        document.getElementById("event-count").textContent = data.event_count;
+        document.getElementById("message-count").textContent =
+          data.message_count;
+        document.getElementById("user-count").textContent = data.user_count;
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Add error handling here, e.g., display an error message to the user
+      });
+  </script>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-content">
+        <i class="fas fa-users"></i>
+        <h2>Users</h2>
+        <p>
+        <div id="user-count"></div>
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-content">
+        <i class="fas fa-chart-line"></i>
+        <h2>Total Messages</h2>
+        <p>
+        <div id="message-count"></div>
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-content">
+        <i class="fas fa-calendar-check"></i>
+        <h2>Events Scheduled</h2>
+        <p>
+        <div id="event-count"></div>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="version-history">
+    <h2><span class="blue-underline">Version History</span></h2>
+    <div class="timeline">
+      <div class="item">
+        <div class="bubble">V3.0</div>
+        <div class="details">
+          <p><b>Released on</b> 23 June 2024</p>
+          <ol>
+            <li>
+              <p><b>Enhanced Security & User Experience:</b> Added features to view upcoming events and share event
+                locations using inline buttons.</p>
+            </li>
+            <li>
+              <p><b>Performance & Scalability:</b> Migrated to Firebase database and Gemini 1.5 Flash for improved
+                performance and scalability. Switched to Fast API for asynchronous support.</p>
+            </li>
+            <li>
+              <p><b>Expanded Functionality:</b> Introduced support for multiple events, a chat feature with Gemini, and
+                a user-friendly dashboard with UI/UX improvements.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="item">
+        <div class="bubble">V2.0</div>
+        <div class="details">
+          <p><b>Released on</b> March 27, 2024</p>
+          <ol>
+            <li>
+              <p><b>Event Management & Location Sharing:</b> Added features to view upcoming events and share event
+                locations using inline buttons.</p>
+            </li>
+            <li>
+              <p><b>Improved Regeneration & Data Management:</b> Significantly reworked the regeneration feature for
+                better accuracy and adopted a MySQL database for managing user data and events.</p>
+            </li>
+            <li>
+              <p><b>Bug Fixes & Optimizations:</b> Addressed various bug fixes, implemented performance optimizations,
+                and introduced weather suggestions.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="item">
+        <div class="bubble">V1.0</div>
+        <div class="details">
+          <p><b>Released on</b> February 2, 2024</p>
+          <ol>
+            <li>
+              <p><b>Initial Release:</b> Launched with a polling method and Hugging Face transformers model for language
+                processing.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<footer>
+  <div class="footer-content">
+    <div class="social-media-container">
+      <a href="https://www.linkedin.com/in/arjuna05/" class="socialContainer containerOne" target="_blank">
+        <i class="fa-brands fa-linkedin-in fa-xl"></i>
+      </a>
+
+      <a href="https://github.com/arjun-mec" class="socialContainer containerTwo" target="_blank">
+        <i class="fa-brands fa-github fa-xl"></i>
+      </a>
+
+      <a href="https://www.instagram.com/arjun.a_05/" class="socialContainer containerThree" target="_blank">
+        <i class="fa-brands fa-instagram fa-xl"></i>
+      </a>
+
+      <a href="mailto:timesked.calendar@gmail.com" class="socialContainer containerFour">
+        <i class="fa-regular fa-envelope fa-xl"></i>
+      </a>
+    </div>
+  </div>
+</footer>
+
+</html>
