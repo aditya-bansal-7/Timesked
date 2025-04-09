@@ -9,10 +9,10 @@ Get weather insights: TimeSked also suggests dressing attire based on the weathe
 Engage in chat conversations: You can engage in a chat with TimeSked about your upcoming events.
 Easy Event Management: View upcoming events, regenerate event details and delete events, all within Telegram.
 Powered by :
-FastAPI (Python) for the webhook server
-Firebase for database management
-Hosted on Koyeb
-Gemini 1.5 Flash API for extracting event details
-Weather data from Visual Crossing API
-Telegram Core API for bot integration
-Google Calendar V3 API for seamless managing Google Calendar
+  FastAPI (Python) for the webhook server
+  Firebase for database management
+  Hosted on Koyeb
+  Gemini 1.5 Flash API for extracting event details
+  Weather data from Visual Crossing API
+  Telegram Core API for bot integration
+  Google Calendar V3 API for seamless managing Google Calendar
